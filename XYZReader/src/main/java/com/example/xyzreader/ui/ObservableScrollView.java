@@ -37,6 +37,7 @@ public class ObservableScrollView extends ScrollView {
         super.onScrollChanged(l, t, oldl, oldt);
         if (mCallbacks != null) {
             mCallbacks.onScrollChanged();
+            mCallbacks.scrollDirection(t - oldt);
         }
     }
 
@@ -61,5 +62,6 @@ public class ObservableScrollView extends ScrollView {
 
     public static interface Callbacks {
         public void onScrollChanged();
+        void scrollDirection(int dif);
     }
 }

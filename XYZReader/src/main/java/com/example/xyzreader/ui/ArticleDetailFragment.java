@@ -1,5 +1,6 @@
 package com.example.xyzreader.ui;
 
+import android.animation.ObjectAnimator;
 import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.Intent;
@@ -67,6 +68,7 @@ public class ArticleDetailFragment extends Fragment implements
     private SimpleDateFormat outputFormat = new SimpleDateFormat();
     // Most time functions can only handle 1902 - 2037
     private GregorianCalendar START_OF_EPOCH = new GregorianCalendar(2,1,1);
+    FloatingActionButton fab;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -134,6 +136,19 @@ public class ArticleDetailFragment extends Fragment implements
                 mPhotoContainerView.setTranslationY((int) (mScrollY - mScrollY / PARALLAX_FACTOR));
                 updateStatusBar();
             }
+
+            @Override
+            public void scrollDirection(int dif) {
+                if (dif > 0){
+                    ObjectAnimator animation = ObjectAnimator.ofFloat(fab, "translationY", 400);
+                    animation.setDuration(500);
+                    animation.start();
+                } else if (dif < -20) {
+                    ObjectAnimator animation = ObjectAnimator.ofFloat(fab, "translationY", 0);
+                    animation.setDuration(500);
+                    animation.start();
+                }
+            }
         });
 
         mPhotoView = (ImageView) mRootView.findViewById(R.id.photo);
@@ -141,7 +156,7 @@ public class ArticleDetailFragment extends Fragment implements
 
         mStatusBarColorDrawable = new ColorDrawable(0);
 
-        FloatingActionButton fab = mRootView.findViewById(R.id.share_fab);
+        fab = mRootView.findViewById(R.id.share_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -151,7 +166,6 @@ public class ArticleDetailFragment extends Fragment implements
                         .getIntent(), getString(R.string.action_share)));
             }
         });
-
         bindViews();
         updateStatusBar();
         return mRootView;
